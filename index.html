@@ -22,7 +22,9 @@
             We hebben op dit moment 79 leden in de vereniging. Er moet tweederde daarvan gerepresenteerd zijn op de ALV. Dat zijn 56 mensen.
         </p> -->
         <h1>Help ons de statuten te wijzigen!</h1>
-        <p class="people-count" id="peopleCount">Loading count...</p>
+        <p class="amount-members" id = "amountMembers">Loading count...</p>
+        <!-- <p class="members-needed" id="membersNeeded">Loading count...</p> -->
+        <!-- <p class="people-count" id="peopleCount">Loading count...</p> -->
         <p> </p>
     <!-- </div>
     <div class="container">
@@ -44,7 +46,7 @@
     </div>
     <div class="container">
         <h2>Hoe kan ik helpen?</h2>
-        <p>Je kan zelf langskomen op 19 mei om 19:30 in de Krater. Als dat niet lukt, kan je iemand machtigen door te mailen naar <a href="mailto:secretaris@particolarte.nl?subject=Machtiging%20statuten-ALV&body=Hoi%20secretaris!%0A%0AIk%20wil%20graag%20%5BINSERT%20NAAM%5D%20machtigen%20voor%20de%20statuten-ALV." target="_blank">secretaris@particolarte.nl</a>. Op <a href="https://kiwi.particolarte.nl/activity/0195b56d-a763-7397-88a0-a2010992658e" target="_blank" >Kiwi</a> kan je zien wie er komen. Je hoeft niet te wachten met machtigen, het kan nu!</p>
+        <p>Je kan zelf langskomen op 19 mei om 19:30 in de Krater. Schrijf je dan in op <a href="https://kiwi.particolarte.nl/activity/0195b56d-a763-7397-88a0-a2010992658e" target="_blank" >Kiwi</a>. Als dat niet lukt, kan je iemand machtigen door te mailen naar <a href="mailto:secretaris@particolarte.nl?subject=Machtiging%20statuten-ALV&body=Hoi%20secretaris!%0A%0AIk%20wil%20graag%20%5BINSERT%20NAAM%5D%20machtigen%20voor%20de%20statuten-ALV." target="_blank">secretaris@particolarte.nl</a>. Op <a href="https://kiwi.particolarte.nl/activity/0195b56d-a763-7397-88a0-a2010992658e" target="_blank" >Kiwi</a> kan je zien wie er komen. Je hoeft niet te wachten met machtigen, het kan nu!</p>
     </div>
     <break></break>
     <div class="container">
@@ -65,12 +67,21 @@
         const COUNT_ROW_INDEX = 1;    // Row 6 is index 5 (Same row as percentage)
         const COUNT_COL_INDEX = 0;    // Column I is index 8
 
+        const MEM_ROW_INDEX = 15;
+        const MEM_COL_INDEX = 0;
+
+        const NEED_ROW_INDEX = 4;
+        const NEED_COL_INDEX = 0;
+
         const POLLING_INTERVAL_MS = 15000; // Check every 15 seconds
+
         // --- End Configuration ---
 
         const progressBarElement = document.getElementById('progressBar');
         const percentageTextElement = document.getElementById('percentageText');
         const peopleCountElement = document.getElementById('peopleCount'); // Get reference to new paragraph
+        const amountMembersElement = document.getElementById('amountMembers');
+        const membersNeededElement = document.getElementById('membersNeeded');
         const errorElement = document.getElementById('errorDisplay');
 
         // Renamed function to reflect it fetches multiple data points
@@ -144,20 +155,86 @@
                      percentageTextElement.classList.remove('loading');
                 }
 
+                 // --- Extract People Count ---
+                 let amountMembersValue = null;
+                // Ensure the SPECIFIC row for the count exists
+                if (rows.length > MEM_ROW_INDEX) {
+                    // *** The Key Fix: Split the CORRECT row string for the count ***
+                    const countCols = rows[MEM_ROW_INDEX].split(',');
+                    // Now access the column within that specific row's columns
+                    if (countCols.length > MEM_COL_INDEX) {
+                        amountMembersValue = countCols[MEM_COL_INDEX].replace(/^"|"$/g, '');
+                    } else {
+                         // Don't throw error here, just log it maybe, or set count to 'N/A'
+                         console.warn(`Count column index ${MEM_COL_INDEX} out of bounds.`);
+                         amountMembersValue = 'N/A'; // Indicate count couldn't be found
+                    }
+                } else {
+                    // Don't throw error here, just log it maybe, or set count to 'N/A'
+                    console.warn(`Count row index ${MEM_ROW_INDEX} out of bounds.`);
+                    amountMembersValue = 'N/A'; // Indicate count couldn't be found
+                }
+
+                // --- Extract People Count ---
+                let membersNeededValue = null;
+                // Ensure the SPECIFIC row for the count exists
+                if (rows.length > NEED_ROW_INDEX) {
+                    // *** The Key Fix: Split the CORRECT row string for the count ***
+                    const countCols = rows[NEED_ROW_INDEX].split(',');
+                    // Now access the column within that specific row's columns
+                    if (countCols.length > NEED_COL_INDEX) {
+                        membersNeededValue = countCols[NEED_COL_INDEX].replace(/^"|"$/g, '');
+                    } else {
+                         // Don't throw error here, just log it maybe, or set count to 'N/A'
+                         console.warn(`Count column index ${NEED_COL_INDEX} out of bounds.`);
+                         membersNeededValue = 'N/A'; // Indicate count couldn't be found
+                    }
+                } else {
+                    // Don't throw error here, just log it maybe, or set count to 'N/A'
+                    console.warn(`Count row index ${NEED_ROW_INDEX} out of bounds.`);
+                    membersNeededValue = 'N/A'; // Indicate count couldn't be found
+                }
+
 
                 // --- Process and Update People Count ---
                  // Basic check if count value looks like a number or is 'N/A'
-                 if (peopleCountValue !== null && (peopleCountValue === 'N/A' || !isNaN(parseInt(peopleCountValue)))) {
-                     if (peopleCountValue === 'N/A') {
-                         peopleCountElement.textContent = 'Count data unavailable.';
+
+                 if (amountMembersValue !== null && (amountMembersValue === 'N/A' || !isNaN(parseInt(amountMembersValue)))) {
+                     if (amountMembersValue === 'N/A') {
+                        amountMembersElement.textContent = 'Count data unavailable.';
                      } else {
-                         peopleCountElement.textContent = ` We hebben op dit moment 79 leden in de vereniging. Er moet tweederde daarvan gerepresenteerd zijn op de ALV. Dat zijn 56 mensen. Er zijn op dit moment ${peopleCountValue} mensen gerepresenteerd. Dat is ${numericPercentage}% van het totaal dat we nodig hebben.`;
+                        amountMembersElement.textContent = ` We hebben op dit moment ${amountMembersValue} leden in de vereniging. Er moet tweederde daarvan gerepresenteerd zijn op de ALV. Dat zijn ${membersNeededValue} mensen.  Er zijn op dit moment ${peopleCountValue} mensen gerepresenteerd. Dat is ${numericPercentage}% van het totaal dat we nodig hebben.`;
                      }
                  } else {
                      console.error(`Invalid count data: "${peopleCountValue}"`);
-                     peopleCountElement.textContent = 'Invalid count data.';
+                     amountMembersElement.textContent = 'Invalid count data.';
                  }
-                 peopleCountElement.classList.remove('loading'); // Remove loading class if any
+                 amountMembersElement.classList.remove('loading'); // Remove loading class if any
+
+                //  if (membersNeededValue !== null && (membersNeededValue === 'N/A' || !isNaN(parseInt(membersNeededValue)))) {
+                //      if (membersNeededValue === 'N/A') {
+                //          membersNeededElement.textContent = 'Count data unavailable.';
+                //      } else {
+                //          membersNeededElement.textContent = ` Er moet tweederde daarvan gerepresenteerd zijn op de ALV. Dat zijn ${membersNeededValue} mensen. `;
+                //      }
+                //  } else {
+                //      console.error(`Invalid count data: "${membersNeededValue}"`);
+                //      membersNeededElement.textContent = 'Invalid count data.';
+                //  }
+
+                //  peopleCountElement.classList.remove('loading'); // Remove loading class if any
+
+                //  if (peopleCountValue !== null && (peopleCountValue === 'N/A' || !isNaN(parseInt(peopleCountValue)))) {
+                //      if (peopleCountValue === 'N/A') {
+                //          peopleCountElement.textContent = 'Count data unavailable.';
+                //      } else {
+                //          peopleCountElement.textContent = ` Er zijn op dit moment ${peopleCountValue} mensen gerepresenteerd. Dat is ${numericPercentage}% van het totaal dat we nodig hebben.`;
+                //      }
+                //  } else {
+                //      console.error(`Invalid count data: "${peopleCountValue}"`);
+                //      peopleCountElement.textContent = 'Invalid count data.';
+                //  }
+                //  peopleCountElement.classList.remove('loading'); // Remove loading class if any
 
             } catch (error) {
                 console.error('Failed to fetch or update data:', error);
