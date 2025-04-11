@@ -14,6 +14,35 @@
             padding-top: 50px;
             background-color: #9F81BA;
         }
+         /* Style the buttons that are used to open and close the accordion panel */
+        .accordion {
+            background-color: #588c92;
+            color: #eee;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+        }
+        
+        /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+        .accordion:hover {
+            background-color: #ccc;
+        }
+
+        .active {
+            background-color: #789fa3;   
+        }
+        
+        /* Style the accordion panel. Note: hidden by default */
+        .panel {
+            padding: 0 18px;
+            background-color: rgb(235, 235, 235);
+            display: none;
+            overflow: hidden;
+        } 
     </style>
 </head>
 <body>
@@ -49,6 +78,30 @@
         <p>Je kan zelf langskomen op 19 mei om 19:30 in de Krater. Schrijf je dan in op <a href="https://kiwi.particolarte.nl/activity/0195b56d-a763-7397-88a0-a2010992658e" target="_blank" >Kiwi</a>. Als dat niet lukt, kan je iemand machtigen door te mailen naar <a href="mailto:secretaris@particolarte.nl?subject=Machtiging%20statuten-ALV&body=Hoi%20secretaris!%0A%0AIk%20wil%20graag%20%5BINSERT%20NAAM%5D%20machtigen%20voor%20de%20statuten-ALV." target="_blank">secretaris@particolarte.nl</a>. Op <a href="https://kiwi.particolarte.nl/activity/0195b56d-a763-7397-88a0-a2010992658e" target="_blank" >Kiwi</a> kan je zien wie er komen. Je hoeft niet te wachten met machtigen, het kan nu!</p>
     </div>
     <break></break>
+    <div class="container">
+        <h2>Q&A</h2>
+        <button class="accordion">Wat zijn de statuten?</button>
+        <div class="panel">
+            <p>In de statuten zijn de belangrijkste regels van de vereniging vastgelegd. Een soort gondwet van Particolarte dus. Dingen als het doel van de vereniging, regels rondom het lidmaatschap en ALV's en bijvoorbeeld ook hoe de statuten weer gewijzigd kunnen worden. Daarvoor is zoals je ondertussen wel weet een opkomstdrempel van 2/3 van de leden. </p>
+        </div>
+        <button class="accordion">Waarom worden de statuten gewijzigd?</button>
+        <div class="panel">
+            <p>In 2021 is de Wet bestuur en toezicht rechtspersonen (WBTR) ingestemd. Daarin werd vastgesteld dat we in onze statuten moeten hebben staan wat er gebeurt wanneer het bestuur langdurig uitvalt (belet en ontstentenis). Wij hebben dit nog niet in onze statuten staan. Daarom moet dit nu gewijzigd worden om weer aan de wet te voldoen. Daarnaast zijn onze statuten niet veranderd sinds de vereniging is opgericht, en is het hoog tijd voor een update. </p>
+        </div>
+        <button class="accordion">Was er nou ook iets met het HR?</button>
+        <div class="panel">
+            <p>Aangezien we toch bezig zijn met het wijzigen van officiële documenten, nemen we ook meteen ons huishoudelijk reglement (HR) mee. Het HR is makkelijker te veranderen dan de statuten, hier is alleen een meerderheid op een ALV voor nodig, zonder opkomstdrempel. We hebben het HR zo aangepast dat het bij de nieuwe statuten aansluit en weer up-to-date is met de huidide gang van zaken binnen de vereniging. We gaan het HR dus ook instemmen op de statuten-ALV. </p>
+        </div>
+        <button class="accordion">Hoe gaat de statuten-ALV in z'n werk?</button>
+        <div class="panel">
+            <p>De herschreven versies van de statuten en het HR worden uiterlijk vijf dagen voor de ALV, maar als het goed is al een week eerder, naar jullie opgestuurd. Wij willen jullie vragen om deze ook van tevoren door te lezen, en eventuele discussiepunten uiterlijk 15 mei naar ons te mailen (<a href="mailto:bestuurd@particolarte.nl">bestuur@particolarte.nl</a>). Ons doel is namelijk om de ALV zo efficiënt mogelijk te laten verlopen, en daarom zullen we alleen punten bespreken die naar ons opgestuurd zijn. Er kunnen dus <b>geen</b> nieuwe punten ingebracht worden op de ALV. Op de ALV zullen we de opgestuurde punten bespreken en dan hopelijk de nieuwe versie van de statuten en het HR instemmen, om daarna lekker door te gaan naar de borrel. </p>
+        </div>
+        <button class="accordion">Zijn er nog meer manieren om te helpen?</button>
+        <div class="panel">
+            <p>Altijd! Ten eerste kan je andere particonauten vragen of ze al iemand gemachtigd hebben (en ze dan niet meer loslaten tot ze een mailtje hebben gestuurd). Je kan een statuten-lees-uurtje organiseren. Je kan op de bar in de Krater gaan staan en mensen vertellen om naar de ALV te komen. Je kan iemands telefoom uit hun handen trekken en zelf een machtiging maar de secretaris sturen - oh nee, doe dat toch maar niet. Iemand moet wel zelf mailen.
+                Als laatste kan je iets liefs zeggen tegen de statutenwerkgroep, want zij hebben al maanden(jaren?)lang gewerkt aan de statuten zodat wij gewoon kunnen voortbestaan :)</p>
+        </div>
+    </div>
     <div class="container">
         <p>Note: Ik zit zelf aan de back-end van deze site. De meter zal pas updaten wanneer ik in mijn mail of op Kiwi heb gekeken hihi</p>
         <p>xo jullie allerliefste secretaris</p>
@@ -252,6 +305,25 @@
 
         // Set up polling
         setInterval(fetchAndUpdateData, POLLING_INTERVAL_MS);
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+            this.classList.toggle("active");
+
+            /* Toggle between hiding and showing the active panel */
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+            panel.style.display = "none";
+            } else {
+            panel.style.display = "block";
+            }
+        });
+        } 
 
     </script>
 </body>
